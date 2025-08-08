@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ParticleBackground from "../components/ParticleBackground";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -95,18 +96,19 @@ export const Login = () => {
 
                     {/* Footer */}
                     <p className="mt-4 text-center text-muted">
-                        Don’t have an account?{" "}
-                        <a href="/signup" className="fw-semibold text-primary">
-                            Sign Up
-                        </a>
+                        Already have an account?{" "}
+                        <Link to="/login" className="fw-semibold text-primary">
+                            Login
+                        </Link>
                     </p>
+
                     <div className="text-center mt-3">
-                        <a
-                            href="/"
+                        <Link
+                            to="/"
                             className="btn btn-outline-secondary btn-sm"
                         >
                             Back to Home
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>
