@@ -4,6 +4,7 @@ import * as THREE from "three";
 
 export default function ParticleBackground() {
     const mountRef = useRef(null);
+    const requestRef = useRef(null);
 
     useEffect(() => {
         const scene = new THREE.Scene();
@@ -20,7 +21,9 @@ export default function ParticleBackground() {
             alpha: true,
         });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        mountRef.current.appendChild(renderer.domElement);
+        if (mountRef.current) {
+            mountRef.current.appendChild(renderer.domElement);
+        }
 
         const particlesCount = 150;
         const positions = new Float32Array(particlesCount * 3);
@@ -45,7 +48,7 @@ export default function ParticleBackground() {
         scene.add(points);
 
         const animate = () => {
-            requestAnimationFrame(animate);
+            requestRef.current = requestAnimationFrame(animate);
             points.rotation.x += 0.0005;
             points.rotation.y += 0.001;
             renderer.render(scene, camera);
@@ -61,7 +64,17 @@ export default function ParticleBackground() {
 
         return () => {
             window.removeEventListener("resize", handleResize);
-            mountRef.current.removeChild(renderer.domElement);
+            if (requestRef.current) cancelAnimationFrame(requestRef.current);
+
+            // Dispose resources
+            geometry.dispose();
+            material.dispose();
+            renderer.dispose();
+
+            // Remove DOM element safely
+            if (renderer.domElement?.parentNode) {
+                renderer.domElement.parentNode.removeChild(renderer.domElement);
+            }
         };
     }, []);
 

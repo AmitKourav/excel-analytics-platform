@@ -97,8 +97,8 @@ export const Login = () => {
                     {/* Footer */}
                     <p className="mt-4 text-center text-muted">
                         Already have an account?{" "}
-                        <Link to="/login" className="fw-semibold text-primary">
-                            Login
+                        <Link to="/signup" className="fw-semibold text-primary">
+                            Signup
                         </Link>
                     </p>
 
