@@ -100,6 +100,14 @@ export const Login = () => {
                             Sign Up
                         </a>
                     </p>
+                    <div className="text-center mt-3">
+                        <a
+                            href="/"
+                            className="btn btn-outline-secondary btn-sm"
+                        >
+                            Back to Home
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

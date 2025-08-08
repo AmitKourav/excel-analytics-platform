@@ -8,14 +8,14 @@ export function HomePage() {
             <h1 className="mb-4">Welcome</h1>
 
             <button
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/login", { replace: true })}
                 className="btn btn-primary btn-lg px-4"
             >
                 Go to Login
             </button>
 
             <button
-                onClick={() => navigate("/signup")}
+                onClick={() => navigate("/signup", { replace: true })}
                 className="btn btn-success btn-lg px-4"
             >
                 Go to Signup
