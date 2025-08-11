@@ -4,10 +4,12 @@ import ParticleBackground from "../components/ParticleBackground";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";  
 
 export const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+
     const {
         register,
         handleSubmit,
@@ -15,16 +17,32 @@ export const Login = () => {
     } = useForm();
 
     const submitHandler = async (data) => {
-        console.log(data); // Debug log
         setLoading(true);
         try {
-            const res = await axios .post(`/api/auth/login`, data);
+            const res = await axios.post(`/api/auth/login`, data);
+            toast.success("Login successful! 🎉");
             console.log(res.data);
         } catch (error) {
-            console.error(error.response?.data || error.message);
+            const msg = error.response?.data?.message || "Invalid credentials!";
+            toast.error(msg);
+            console.error(msg);
         } finally {
             setLoading(false);
         }
+    };
+
+    const validationSchema = {
+        emailValidator: {
+            required: { value: true, message: "*Please Enter This Field" },
+            pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "*Enter a valid email",
+            },
+        },
+        passwordValidator: {
+            required: { value: true, message: "*Please Enter This Field" },
+            minLength: { value: 6, message: "*Minimum password Length is 6" },
+        },
     };
 
     return (
@@ -46,9 +64,14 @@ export const Login = () => {
                                 className="form-control"
                                 id="email"
                                 placeholder="name@example.com"
-                                {...register("email")}
-                                required
+                                {...register(
+                                    "email",
+                                    validationSchema.emailValidator
+                                )}
                             />
+                            <span className="errormsg">
+                                {errors.email?.message}
+                            </span>
                             <label htmlFor="email">Email address</label>
                         </div>
 
@@ -59,9 +82,14 @@ export const Login = () => {
                                 className="form-control"
                                 id="password"
                                 placeholder="Password"
-                                {...register("password")}
-                                required
+                                {...register(
+                                    "password",
+                                    validationSchema.passwordValidator
+                                )}
                             />
+                            <span className="errormsg">
+                                {errors.password?.message}
+                            </span>
                             <label htmlFor="password">Password</label>
                             <small
                                 className="text-primary position-absolute"
@@ -76,15 +104,7 @@ export const Login = () => {
                             </small>
                         </div>
 
-                        {/* Error message placeholder */}
-                        <div
-                            className="text-danger small mb-3"
-                            style={{ minHeight: "18px" }}
-                        >
-                            {/* Error message will go here */}
-                        </div>
-
-                        {/* Button */}
+                        {/* Submit Button */}
                         <button
                             type="submit"
                             className="btn btn-primary w-100"
@@ -96,7 +116,7 @@ export const Login = () => {
 
                     {/* Footer */}
                     <p className="mt-4 text-center text-muted">
-                        Already have an account?{" "}
+                        Don’t have an account?{" "}
                         <Link to="/signup" className="fw-semibold text-primary">
                             Signup
                         </Link>

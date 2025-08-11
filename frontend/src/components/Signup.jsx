@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import ParticleBackground from "../components/ParticleBackground";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Color } from "three/src/Three.Core.js";
 
 export const Signup = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -16,16 +18,37 @@ export const Signup = () => {
     } = useForm();
 
     const submitHandler = async (data) => {
-        console.log(data); // Debug log
         setLoading(true);
         try {
             const res = await axios.post(`/api/auth/register`, data);
+            toast.success("Registration successful! 🎉");
             console.log(res.data);
         } catch (error) {
-            console.error(error.response?.data || error.message);
+            const msg =
+                error.response?.data?.message || "Something went wrong!";
+            toast.error(msg);
+            console.error(msg);
         } finally {
             setLoading(false);
         }
+    };
+
+    const validationSchema = {
+        nameValidator: {
+            required: { value: true, message: "*Please Enter This Field" },
+            minLength: { value: 3, message: "*Minimum Name Length is 3" },
+        },
+        emailValidator: {
+            required: { value: true, message: "*Please Enter This Field" },
+            pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "*Enter a valid email",
+            },
+        },
+        passwordValidator: {
+            required: { value: true, message: "*Please Enter This Field" },
+            minLength: { value: 6, message: "*Minimum password Length is 6" },
+        },
     };
 
     return (
@@ -47,8 +70,14 @@ export const Signup = () => {
                                 className="form-control"
                                 id="name"
                                 placeholder="John Doe"
-                                {...register("name", { required: true })}
+                                {...register(
+                                    "name",
+                                    validationSchema.nameValidator
+                                )}
                             />
+                            <span className="errormsg">
+                                {errors.name?.message}
+                            </span>
                             <label htmlFor="name">Full Name</label>
                         </div>
 
@@ -59,8 +88,14 @@ export const Signup = () => {
                                 className="form-control"
                                 id="email"
                                 placeholder="name@example.com"
-                                {...register("email", { required: true })}
+                                {...register(
+                                    "email",
+                                    validationSchema.emailValidator
+                                )}
                             />
+                            <span className="errormsg">
+                                {errors.email?.message}
+                            </span>
                             <label htmlFor="email">Email address</label>
                         </div>
 
@@ -85,8 +120,14 @@ export const Signup = () => {
                                 className="form-control"
                                 id="password"
                                 placeholder="Password"
-                                {...register("password", { required: true })}
+                                {...register(
+                                    "password",
+                                    validationSchema.passwordValidator
+                                )}
                             />
+                            <span className="errormsg">
+                                {errors.password?.message}
+                            </span>
                             <label htmlFor="password">Password</label>
                             <small
                                 className="text-primary position-absolute"

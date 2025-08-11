@@ -6,6 +6,8 @@ import { Signup } from "./components/Signup";
 import { Login } from "./components/Login";
 import { HomePage } from "./components/HomePage";
 import ParticleBackground from "./components/ParticleBackground";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
     const navigate = useNavigate();
@@ -33,6 +35,7 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
             </Routes>
+            <ToastContainer position="top-right" autoClose={3000} />
         </>
     );
 }
